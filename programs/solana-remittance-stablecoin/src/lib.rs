@@ -15,11 +15,12 @@ declare_id!("EP4wQ8HCQZM8Jx8PhSn8YUNXWUb3Yx8XNFwmiSFoF3kU");
 pub mod solana_remittance_stablecoin {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        crate::instructions::initialize::handle_initialize(ctx)
-    }
-
-    pub fn increment(ctx: Context<Increment>) -> Result<()> {
-        crate::instructions::increment::handle_increment(ctx)
+    pub fn initialize_mint(
+        ctx: Context<InitializeMint>,
+        decimals: u8,
+        transfer_fee_basis_points: u16,
+        maximum_fee: u64,
+    ) -> Result<()> {
+        handle_initialize_mint(ctx, decimals, transfer_fee_basis_points, maximum_fee)
     }
 }
