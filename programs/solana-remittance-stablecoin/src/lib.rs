@@ -23,4 +23,8 @@ pub mod solana_remittance_stablecoin {
     ) -> Result<()> {
         handle_initialize_mint(ctx, decimals, transfer_fee_basis_points, maximum_fee)
     }
+
+    pub fn thaw_account(ctx: Context<ThawAccount>) -> Result<()> {
+        handle_thaw_account(ctx)
+    }
 }
