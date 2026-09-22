@@ -27,4 +27,8 @@ pub mod solana_remittance_stablecoin {
     pub fn thaw_account(ctx: Context<ThawAccount>) -> Result<()> {
         handle_thaw_account(ctx)
     }
+
+    pub fn transfer(ctx: Context<Transfer>, amount: u64) -> Result<()> {
+        transfer::handle_transfer(ctx, amount)
+    }
 }
