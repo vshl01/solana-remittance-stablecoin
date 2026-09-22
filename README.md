@@ -1,13 +1,13 @@
 ```
 Anchor Program
 │
-├── 1. initialize_mint()
+├── 1. initialize_mint()✅
 │ └── Create & configure Token-2022 mint
 │
-├── 2. transfer()
+├── 2. transfer()✅
 │ └── Transfer tokens with protocol fee
 │
-├── 3. thaw_account()
+├── 3. thaw_account()✅
 │ └── Unfreeze user's ATA after mock KYC
 │
 ├── 4. configure_confidential()
@@ -27,6 +27,28 @@ Anchor Program
 ```
 
 **Flow:** `Mint` → `Transfer/KYC` → `Configure` → `Deposit` → `Apply` → `Confidential Transfer` → `Apply` → `Withdraw`
+
+```
+Token-2022 Mint Account
+│
+├── Base Mint data
+│    ├── mint_authority
+│    ├── freeze_authority
+│    ├── decimals
+│    └── supply
+│
+├── TransferFeeConfig extension
+│    ├── fee rate
+│    ├── max fee
+│    └── fee authorities
+│
+├── MetadataPointer extension
+├── DefaultAccountState extension
+├── MintCloseAuthority extension
+├── PermanentDelegate extension
+└── ConfidentialTransferMint extension
+
+```
 
 ## Proper Implementation Steps
 
