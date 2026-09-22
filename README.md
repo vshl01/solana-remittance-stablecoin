@@ -137,19 +137,50 @@ Token-2022 Mint Account
 ## Final mental model
 
 ```
-MINT
- ↓
-User ATA
- ↓
-Frozen → KYC → Thaw
- ↓
-Normal Transfer + Fee
- ↓
-Configure Confidential
- ↓
-Deposit → Apply
- ↓
-Confidential Transfer → Apply
- ↓
-Withdraw
+                 TOKEN-2022 MINT
+                       │
+        ┌──────────────┼─────────────────┐
+        │              │                 │
+ TransferFee      Frozen Accounts    Confidential
+ Metadata         MintClose          PermanentDelegate
+                  Authority
+        │
+        ▼
+     User ATA
+        │
+        ▼
+   ┌─────────────┐
+   │    Frozen   │
+   └──────┬──────┘
+          │ KYC
+          ▼
+        Thaw
+          │
+          ▼
+       Active
+          │
+          ├────────────── Normal Transfer
+          │                    │
+          │                    ▼
+          │             transfer_checked_with_fee
+          │
+          └────────────── Confidential Setup
+                               │
+                               ▼
+                         ConfigureAccount
+                               │
+                               ▼
+                            Deposit
+                               │
+                               ▼
+                       ApplyPendingBalance
+                               │
+                               ▼
+                    Confidential Transfer
+                               │
+                               ▼
+                       ApplyPendingBalance
+                               │
+                               ▼
+                           Withdraw
 ```
