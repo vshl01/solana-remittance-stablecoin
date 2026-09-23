@@ -3285,6 +3285,7 @@ dependencies = [
  "solana-message",
  "solana-signer",
  "solana-transaction",
+ "spl-token-confidential-transfer-proof-extraction",
 ]
 
 [[package]]

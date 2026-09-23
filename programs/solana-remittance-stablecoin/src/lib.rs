@@ -31,4 +31,20 @@ pub mod solana_remittance_stablecoin {
     pub fn transfer(ctx: Context<Transfer>, amount: u64) -> Result<()> {
         transfer::handle_transfer(ctx, amount)
     }
+
+    pub fn configure_account(
+        ctx: Context<ConfigureAccount>,
+        decryptable_zero_balance: [u8; 36],
+        maximum_pending_balance_credit_counter: u64,
+    ) -> Result<()> {
+        handle_configure_account(
+            ctx,
+            decryptable_zero_balance,
+            maximum_pending_balance_credit_counter,
+        )
+    }
+
+    pub fn approve_account(ctx: Context<ApproveAccount>) -> Result<()> {
+        handle_approve_account(ctx)
+    }
 }
