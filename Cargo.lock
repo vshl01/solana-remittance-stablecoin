@@ -3280,12 +3280,16 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
+ "bytemuck",
  "litesvm",
+ "solana-compute-budget-interface",
  "solana-keypair",
  "solana-message",
  "solana-signer",
+ "solana-system-interface 2.0.0",
  "solana-transaction",
  "spl-token-confidential-transfer-proof-extraction",
+ "spl-token-confidential-transfer-proof-generation",
 ]
 
 [[package]]
