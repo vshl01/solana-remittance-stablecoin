@@ -1,7 +1,7 @@
 [package]
 name = "solana-remittance-stablecoin"
 version = "0.1.0"
-description = "Created with Anchor"
+description = "Token-2022 remittance stablecoin: protocol fee, KYC-gated accounts, on-chain metadata, seizure and confidential transfers"
 edition.workspace = true
 rust-version.workspace = true
 
@@ -14,7 +14,7 @@ default = []
 cpi = ["no-entrypoint"]
 no-entrypoint = []
 no-log-ix-name = []
-idl-build = ["anchor-lang/idl-build"]
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
 anchor-debug = []
 custom-heap = []
 custom-panic = []
@@ -26,11 +26,15 @@ anchor-spl = { version = "1.2.0", features = ["token_2022", "token_2022_extensio
 spl-token-confidential-transfer-proof-extraction = "0.5.1"
 
 [dev-dependencies]
+bytemuck = "1.25.2"
 litesvm = "0.10.0"
-solana-message = "3.0.1"
-solana-transaction = "3.0.2"
-solana-signer = "3.0.0"
+solana-compute-budget-interface = "3.1.0"
 solana-keypair = "3.0.1"
+solana-message = "3.0.1"
+solana-signer = "3.0.0"
+solana-system-interface = { version = "2.0.0", features = ["bincode"] }
+solana-transaction = "3.0.2"
+spl-token-confidential-transfer-proof-generation = "0.5.1"
 
 
 [lints.rust]

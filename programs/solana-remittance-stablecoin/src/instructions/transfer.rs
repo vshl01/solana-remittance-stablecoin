@@ -1,18 +1,9 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
-
-use anchor_spl::token_2022::spl_token_2022::{
-    extension::{
-        transfer_fee::instruction::transfer_checked_with_fee,
-        transfer_fee::TransferFeeConfig,
-        BaseStateWithExtensions,
-        StateWithExtensions,
-    },
+use anchor_spl::token_interface::{
+    transfer_checked_with_fee, Mint, Token2022, TokenAccount, TransferCheckedWithFee,
 };
 
-use anchor_lang::solana_program::program::invoke;
-
-use crate::error::ErrorCode;
+use crate::utils::expected_transfer_fee;
 
 #[derive(Accounts)]
 pub struct Transfer<'info> {
@@ -37,60 +28,29 @@ pub struct Transfer<'info> {
     )]
     pub destination: InterfaceAccount<'info, TokenAccount>,
 
-    pub token_program: Interface<'info, TokenInterface>,
+    pub token_program: Program<'info, Token2022>,
 }
 
-pub fn handle_transfer(
-    ctx: Context<Transfer>,
-    amount: u64,
-) -> Result<()> {
+/// Public transfer that always pays the protocol fee. The fee is computed from
+/// the rate active in the current epoch and passed to TransferCheckedWithFee,
+/// which makes Token-2022 reject the transfer if the sender expected a
+/// different fee.
+pub fn handle_transfer(ctx: Context<Transfer>, amount: u64) -> Result<()> {
+    let fee = expected_transfer_fee(&ctx.accounts.mint.to_account_info(), amount)?;
 
-    // Current Solana epoch
-    let current_epoch = Clock::get()?.epoch;
-
-    // Read the mint using StateWithExtensions.
-    // Scoped so the data borrow ends before the CPI below.
-    let mint_info = ctx.accounts.mint.to_account_info();
-    let fee = {
-        let mint_data = mint_info.try_borrow_data()?;
-
-        let mint = StateWithExtensions::<
-            anchor_spl::token_2022::spl_token_2022::state::Mint,
-        >::unpack(&mint_data)?;
-
-        // Get TransferFeeConfig extension
-        let transfer_fee_config = mint.get_extension::<TransferFeeConfig>()?;
-
-        // Calculate fee using the CURRENT epoch
-        transfer_fee_config
-            .calculate_epoch_fee(current_epoch, amount)
-            .ok_or_else(|| error!(ErrorCode::FeeCalculationFailed))?
-    };
-
-    // Create Token-2022 TransferCheckedWithFee instruction
-    let ix = transfer_checked_with_fee(
-        &ctx.accounts.token_program.key(),
-        &ctx.accounts.source.key(),
-        &ctx.accounts.mint.key(),
-        &ctx.accounts.destination.key(),
-        &ctx.accounts.authority.key(),
-        &[],
+    transfer_checked_with_fee(
+        CpiContext::new(
+            ctx.accounts.token_program.key(),
+            TransferCheckedWithFee {
+                token_program_id: ctx.accounts.token_program.to_account_info(),
+                source: ctx.accounts.source.to_account_info(),
+                mint: ctx.accounts.mint.to_account_info(),
+                destination: ctx.accounts.destination.to_account_info(),
+                authority: ctx.accounts.authority.to_account_info(),
+            },
+        ),
         amount,
         ctx.accounts.mint.decimals,
         fee,
-    )?;
-
-    // Execute Token-2022 CPI
-    invoke(
-        &ix,
-        &[
-            ctx.accounts.source.to_account_info(),
-            ctx.accounts.mint.to_account_info(),
-            ctx.accounts.destination.to_account_info(),
-            ctx.accounts.authority.to_account_info(),
-        ],
-    )?;
-
-    Ok(())
+    )
 }
-

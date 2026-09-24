@@ -1,11 +1,27 @@
+pub mod apply_pending_balance;
 pub mod approve_account;
+pub mod close_mint;
+pub mod confidential_transfer;
 pub mod configure_account;
+pub mod deposit;
+pub mod freeze_account;
 pub mod initialize;
+pub mod reissue_mint;
+pub mod seize;
 pub mod thaw_account;
 pub mod transfer;
+pub mod withdraw;
 
+pub use apply_pending_balance::*;
 pub use approve_account::*;
+pub use close_mint::*;
+pub use confidential_transfer::*;
 pub use configure_account::*;
+pub use deposit::*;
+pub use freeze_account::*;
 pub use initialize::*;
+pub use reissue_mint::*;
+pub use seize::*;
 pub use thaw_account::*;
 pub use transfer::*;
+pub use withdraw::*;

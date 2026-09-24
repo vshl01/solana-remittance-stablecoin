@@ -2,10 +2,10 @@ use anchor_lang::prelude::*;
 
 #[error_code]
 pub enum ErrorCode {
-    #[msg("Only the counter authority can update this counter")]
-    Unauthorized,
-    #[msg("Counter has reached the maximum value")]
-    CounterOverflow,
     #[msg("Failed to calculate transfer fee")]
     FeeCalculationFailed,
+    #[msg("Signer is not the mint's permanent delegate")]
+    NotPermanentDelegate,
+    #[msg("Mint still has tokens in circulation")]
+    MintHasSupply,
 }
